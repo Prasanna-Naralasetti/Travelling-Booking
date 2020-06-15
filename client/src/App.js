@@ -1,25 +1,33 @@
-import React from 'react';
-import { BrowserRouter, Route, Link, Switch } from 'react-router-dom'
-import Home from './components/Home'
-import Login from './components/auth/Login'
-import Register from './components/auth/Register'
+
+import React, { Suspense } from 'react';
+import { Route, Switch } from "react-router-dom";
+import Auth from "../hoc/auth";
+// pages for this product
+import LandingPage from "./components/views/LandingPage";
+import LoginPage from "./components/views/LoginPage";
+import RegisterPage from "./components/views/RegistrationPage";
+import NavBar from "./components/views/NavBar/NavBar";
+import Footer from "./components/views/Footer"
+
+//null   Anyone Can go inside
+//true   only logged in user can go inside
+//false  logged in user can't go inside
 
 function App() {
   return (
-    <BrowserRouter>
-      <div>
-        <Link to="/">Home</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/register">Register</Link>
-
+    <Suspense fallback={(<div>Loading...</div>)}>
+      <NavBar />
+      <div style={{ paddingTop: '69px', minHeight: 'calc(100vh - 80px)' }}>
         <Switch>
-          <Route path="/" component={Home} exact />
-          <Route path="/login" component={Login} exact />
-          <Route path="/register" component={Register} exact />
+          <Route exact path="/" component={Auth(LandingPage, null)} />
+          <Route exact path="/login" component={Auth(LoginPage, false)} />
+          <Route exact path="/register" component={Auth(RegisterPage, false)} />
         </Switch>
       </div>
-    </BrowserRouter>
+      <Footer />
+    </Suspense>
   );
 }
 
 export default App;
+
